@@ -10,17 +10,18 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    Возвращает только категории
+      Возвращает только категории
 
-        Получение конкретной категории на основе слага(также отдает подкатегории).
-        Возвращает:
-            Category: Запрошенная категория.
-        """
-    # queryset = Category.objects.all().filter(is_subcategory=False)
+          Получение конкретной категории на основе слага(также отдает подкатегории).
+          Возвращает:
+              Category: Запрошенная категория.
+          """
+
     serializer_class = CategorySerializer
-    lookup_field = 'slug'   
+    lookup_field = 'slug'
 
     def get_queryset(self):
+
         # Получаем все slug категорий, которые являются подкатегориями других категорий
         sub_category_slugs = Category.objects.filter(top_catgeory__isnull=False).values_list('slug', flat=True)
         # Фильтруем топ-категории (top_catgeory=None), исключая те, которые уже есть в подкатегориях
@@ -29,49 +30,54 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_object(self):
         """
-        Получение конкретной категории на основе слага.
-        """
+               Получение конкретной категории на основе слага.
+               """
         category_slug = self.kwargs['category_slug']
         return get_object_or_404(Category, slug=category_slug)
-    # def get_object(self):
-        
-    #     category_slug = self.kwargs['category_slug']
-    #     return get_object_or_404(Category, slug=category_slug)
 
-        
+    def get_all_products(self, category):
+        """
+        Получение всех продуктов из всех категорий и подкатегорий
+        """
+        products = Product.objects.filter(category=category, is_available=True)
+
+        subcategories = Category.objects.filter(top_catgeory=category)
+
+        for subcategory in subcategories:
+            products = products | self.get_all_products(subcategory)
+
+        return products
+
     @action(detail=True, methods=['get'])
     def product_list(self, request, category_slug):
         """
-        Получение списка товаров, связанных с конкретной категорией.
-
+        Получение продуктов из категории и всех её подкатегорий.
         Аргументы:
-            request: Объект HTTP-запроса.
-            category_slug (str): Слаг категории.
-
-        Возвращает:
-            Response: Список сериализованных товаров.
+        category_clug (обязатеольный): слаг категории
+        Ответ:
+        Product (list):список продуктов из категорий и подкатегорий
         """
-        if Product.objects.filter(category__top_catgeory__slug=category_slug, is_available=True).exists():
-            obj = Product.objects.filter(category__top_catgeory__slug=category_slug, is_available=True)
-        else:
-            obj = Product.objects.filter(category__slug=category_slug, is_available=True)
-        serializer = ProductSerializer(obj, many=True)
-        print(obj)
+        category = self.get_object()
+        products = self.get_all_products(category)
+        serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
-    
+    """
+           Получение конкретного товара на основе предоставленного слага.
+           Аргументы:
+            category_slug (обязательный): слаг категории
+            product_slug (обязательный): слаг продукта
+           Возвращает:
+               Product: Запрошенный товар.
+           """
+
     queryset = Product.objects.filter(is_available=True)
     serializer_class = ProductSerializer
     lookup_field = 'slug'
 
     def get_object(self):
-        """
-        Получение конкретного товара на основе предоставленного слага.
 
-        Возвращает:
-            Product: Запрошенный товар.
-        """
         product_slug = self.kwargs['product_slug']
         return get_object_or_404(Product, slug=product_slug)
 
