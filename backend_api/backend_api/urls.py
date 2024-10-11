@@ -21,7 +21,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/account/', include('users.urls')),
-    path('api/store/', include('store.urls')),
+    path('api/v1/store/', include('store.urls')),
     
 
     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),

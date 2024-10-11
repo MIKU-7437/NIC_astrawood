@@ -16,14 +16,27 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
         Возвращает:
             Category: Запрошенная категория.
         """
-    queryset = Category.objects.all().filter(is_subcategory=False)
+    # queryset = Category.objects.all().filter(is_subcategory=False)
     serializer_class = CategorySerializer
     lookup_field = 'slug'   
 
+    def get_queryset(self):
+        # Получаем все slug категорий, которые являются подкатегориями других категорий
+        sub_category_slugs = Category.objects.filter(top_catgeory__isnull=False).values_list('slug', flat=True)
+        # Фильтруем топ-категории (top_catgeory=None), исключая те, которые уже есть в подкатегориях
+        queryset = Category.objects.filter(top_catgeory__isnull=True).exclude(slug__in=sub_category_slugs)
+        return queryset
+
     def get_object(self):
-        
+        """
+        Получение конкретной категории на основе слага.
+        """
         category_slug = self.kwargs['category_slug']
         return get_object_or_404(Category, slug=category_slug)
+    # def get_object(self):
+        
+    #     category_slug = self.kwargs['category_slug']
+    #     return get_object_or_404(Category, slug=category_slug)
 
         
     @action(detail=True, methods=['get'])
