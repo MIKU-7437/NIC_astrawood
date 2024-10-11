@@ -4,3 +4,6 @@ backend_api/media
 venv/
 .idea/
 .env
+__pycache__/
+
+
