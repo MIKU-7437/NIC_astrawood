@@ -1,0 +1,49 @@
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    container_name: NIC_astrawoood_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env-dev
+
+    networks:
+      - nic_astrawood_network
+
+
+
+  nic_astrawood:
+    build:
+      context:
+        .
+      dockerfile:  Dockerfile
+    restart: always
+    container_name: nic_astrawood
+    expose:
+      - 8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+      - .env-dev
+    volumes:
+      - static_volume:/staticfiles
+      - media_volume:/media
+    networks:
+      - nic_astrawood_network
+
+
+
+
+networks:
+  nic_astrawood_network:
+    driver: bridge
+
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:

@@ -1,0 +1,8 @@
+services:
+  nic_astrawood:
+    env_file:
+      - .env-dev
+
+    volumes:
+      - .:/nic_astrawood
+    command: python manage.py runserver 0.0.0.0:8000
