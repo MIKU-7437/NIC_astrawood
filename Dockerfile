@@ -28,12 +28,11 @@ RUN --mount=type=cache,target=/root/.cache/pip pip install --upgrade pip && pip 
 COPY . .
 
 RUN python manage.py migrate
-RUN python manage.py collectstatic --noinput
-RUN pip install gunicorn
 
 
-#USER myuser
+
+USER myuser
 
 
-#CMD ["gunicorn", "-c", "gunicorn_config.py", "backend_api.wsgi:application"]
+
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
