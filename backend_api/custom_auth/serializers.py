@@ -29,13 +29,28 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         return user
 
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        token['name'] = user.get_full_name()
-        return token
+# class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+#     @classmethod
+#     def get_token(cls, user):
+#         token = super().get_token(user)
+#         token['name'] = user.get_full_name()
+#         return token
 
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        # Получаем данные из базового класса
+        data = super().validate(attrs)
+
+        # Получаем пользователя
+        user = self.user
+
+        # Проверяем, что пользователь активирован
+        if not user.is_active:
+            raise serializers.ValidationError("Аккаунт не активирован. Проверьте свою почту для активации аккаунта.")
+
+        return data
+    
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)

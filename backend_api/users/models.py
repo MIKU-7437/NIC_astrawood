@@ -24,6 +24,8 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractUser):
     
+    is_active = models.BooleanField(default=False)
+    
     email = models.EmailField(
         verbose_name='Почта',
         max_length=256,
