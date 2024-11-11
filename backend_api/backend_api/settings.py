@@ -69,11 +69,11 @@ if os.environ.get('POSTGRES_DB') and os.environ.get('POSTGRES_USER'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('POSTGRES_DB', 'railway'),
-            'USER': os.environ.get('POSTGRES_USER', 'postgres'),
-            'PASSWORD': os.environ.get('POSTGRES_PASSWORD', '35-*D63DEBC4bFB62F5gc*4E4-c5ef*d'),
-            'PORT': os.environ.get('POSTGRES_PORT', 32441),
-            'HOST': os.environ.get('POSTGRES_HOST', 'roundhouse.proxy.rlwy.net'),
+            'NAME': os.environ.get('POSTGRES_DB'),
+            'USER': os.environ.get('POSTGRES_USER'),
+            'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+            'PORT': os.environ.get('POSTGRES_PORT'),
+            'HOST': os.environ.get('POSTGRES_HOST'),
         }
     }
 else:

@@ -6,8 +6,11 @@ services:
     container_name: NIC_astrawoood_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_HOST=db
     env_file:
-      - .env-dev
+      - .env
+
 
     networks:
       - nic_astrawood_network
@@ -27,8 +30,10 @@ services:
       - "8000:8000"
     depends_on:
       - db
+    environment:
+      - POSTGRES_HOST=db
     env_file:
-      - .env-dev
+      - .env
     volumes:
       - static_volume:/staticfiles
       - media_volume:/media
