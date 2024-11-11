@@ -41,6 +41,28 @@ services:
       - nic_astrawood_network
 
 
+  nginx:
+    image: nginx:latest
+    restart: always
+    container_name: nic_astrawood-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d/
+      - ./staticfiles:/static
+      - ./media:/media
+      - /home/portal/avh_portal/ssl:/etc/nginx/ssl
+      - /root/projects/NIC_astrawood/backend_api/static:/root/projects/NIC_astrawood/backend_api/static
+      - /root/projects/NIC_astrawood/backend_api/media:/root/projects/NIC_astrawood/backend_api/media
+
+    depends_on:
+      - nic_astrawood
+    networks:
+      - nic_astrawood_network
+   
+
+
 
 
 networks:
