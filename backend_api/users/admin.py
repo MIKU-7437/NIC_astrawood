@@ -1,5 +1,5 @@
 from django.contrib import admin
-from users.models import User
+from users.models import User, Profile
 from django.utils.html import format_html
 
 @admin.register(User)
@@ -23,3 +23,10 @@ class UserAdmin(admin.ModelAdmin):
     
     image_tag.short_description = 'Image'
     # Краткое описание для поля image_tag в административном интерфейсе
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    # Класс для настройки отображения модели Profile в административном интерфейсе
+    list_display = ('user', 'phone_number', 'birth_date')
+    search_fields = ('user__username', 'phone_number')
+    list_filter = ('birth_date',)

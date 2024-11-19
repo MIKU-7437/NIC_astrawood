@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib.auth.models import AbstractUser, BaseUserManager, Group, Permission
+from django.contrib.auth.models import User
+from django.utils.timezone import now
 
 
 class CustomUserManager(BaseUserManager):
@@ -93,3 +95,18 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+def user_avatar_path(instance, filename):
+    # Задает путь к файлу аватара: media/avatars/user_<id>/<filename>
+    return f'avatars/user_{instance.user.id}/{filename}'
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    avatar = models.ImageField(upload_to=user_avatar_path, blank=True, null=True)
+    bio = models.TextField(max_length=500, blank=True)
+    phone_number = models.CharField(max_length=15, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+    created_at = models.DateTimeField(default=now, editable=False)
+
+    def __str__(self):
+        return f"{self.user.username}'s Profile"

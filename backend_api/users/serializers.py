@@ -1,9 +1,16 @@
 from rest_framework import serializers
 from .models import User
+from .models import Profile
 from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ['avatar', 'bio', 'phone_number', 'birth_date']
+
 class UserSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer()
     # Сериализатор для модели User, используемый для преобразования данных пользователя
 
     class Meta:
@@ -18,18 +25,28 @@ class UserSerializer(serializers.ModelSerializer):
             "region",
             "address",
             "phone",
-            "photo"
+            "photo",
+            "profile"
         ]
         # fields = '__all__'
         # Установка полей только для чтения(не меняются)
-        read_only_fields = ('email', 'username')
+        read_only_fields = ('email', 'username', 'profile')
+
 
     #redacting 'username' field depending on 'first_name' and 'last_name'
     def update(self, instance, validated_data):
+        profile_data = validated_data.pop('profile', {})
+        profile = instance.profile
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
 
         instance.username = f"{instance.first_name} {instance.last_name}"
+        
+        profile.avatar = profile_data.get('avatar', profile.avatar)
+        profile.bio = profile_data.get('bio', profile.bio)
+        profile.phone_number = profile_data.get('phone_number', profile.phone_number)
+        profile.birth_date = profile_data.get('birth_date', profile.birth_date)
+        profile.save()
 
         return super().update(instance, validated_data)
 
