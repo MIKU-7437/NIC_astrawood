@@ -5,11 +5,18 @@ from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class ProfileSerializer(serializers.ModelSerializer):
+    """
+    Сериалайзер для профиля пользователя.
+    """
     class Meta:
         model = Profile
         fields = ['avatar', 'bio', 'phone_number', 'birth_date']
+        ref_name = 'UserProfileSerializer'
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    Сериалайзер для пользователя, включающий профиль.
+    """
     profile = ProfileSerializer()
     # Сериализатор для модели User, используемый для преобразования данных пользователя
 

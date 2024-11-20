@@ -6,6 +6,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.core.exceptions import ValidationError
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import CustomTokenObtainPairSerializer
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -332,11 +334,26 @@ class ChangePasswordView(generics.UpdateAPIView):
 
 class UserProfileView(generics.RetrieveUpdateAPIView):
     """
-    Возвращает или изменяет данные профиля пользователя.
+    Вьюха для получения и обновления профиля текущего пользователя.
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    @swagger_auto_schema(
+        operation_description="Получить профиль текущего пользователя",
+        responses={200: UserSerializer}
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        operation_description="Обновить профиль текущего пользователя",
+        request_body=UserSerializer,
+        responses={200: UserSerializer}
+    )
+    def put(self, request, *args, **kwargs):
+        return super().put(request, *args, **kwargs)
 
     def get_object(self):
         return self.request.user

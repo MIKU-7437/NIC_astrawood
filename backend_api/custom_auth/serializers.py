@@ -10,6 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['email', 'first_name', 'last_name', 'phone', 'city', 'region', 'address', 'photo']
         read_only_fields = ['email']
+        ref_name = 'CustomAuthUserSerializer'
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
