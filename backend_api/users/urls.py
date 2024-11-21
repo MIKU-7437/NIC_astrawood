@@ -4,7 +4,6 @@ from .views import UserProfileView
 
 urlpatterns = [
     path('list/', views.AllUsersView.as_view(), name='account-list'),  # Список пользователей, если это ещё актуально
-    path('', views.UserDetailView.as_view(), name='account-detail'),  # Детали аккаунта пользователя
-    path('change-password/', views.ChangePasswordView.as_view(), name='change-password'),  # Смена пароля
+    # path('', views.UserDetailView.as_view(), name='account-detail'),  # Детали аккаунта пользователя
     path('profile/', UserProfileView.as_view(), name='user-profile'), # Эта строка кода определяет шаблон URL для доступа к странице профиля пользователя в Django web
 ]

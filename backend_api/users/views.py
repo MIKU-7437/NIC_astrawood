@@ -1,5 +1,5 @@
 from .models import User
-from .serializers import RegisterSerializer, UserSerializer, EmailVerificationSerializer, ChangePasswordSerializer
+from .serializers import RegisterSerializer, UserSerializer, EmailVerificationSerializer
 from .utils import Util
 from rest_framework import status, generics, viewsets, permissions, mixins
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -289,47 +289,6 @@ class AllUsersView(APIView):
         # Сериализация и возврат данных всех пользователей
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
-
-
-class ChangePasswordView(generics.UpdateAPIView):
-    """
-    Описание: Изменяет пароль пользователя.
-    (Пока без подтверждения через почту скоро добавлю)
-    Параметры:
-    old_password (обязательный): Текущий пароль пользователя.
-    new_password (обязательный): Новый пароль пользователя.
-    Ответ: Сообщение об успешном обновлении пароля.
-    """
-    serializer_class = ChangePasswordSerializer
-    model = User
-    permission_classes = (permissions.IsAuthenticated,)
-    authentication_classes =[JWTAuthentication]
-
-    def get_object(self, queryset=None):
-        obj = self.request.user
-        return obj
-
-    def update(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        serializer = self.get_serializer(data=request.data)
-
-        if serializer.is_valid():
-            # Check old password
-            if not self.object.check_password(serializer.data.get("old_password")):
-                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
-            # set_password also hashes the password that the user will get
-            self.object.set_password(serializer.data.get("new_password"))
-            self.object.save()
-            response = {
-                'status': 'success',
-                'code': status.HTTP_200_OK,
-                'message': 'Password updated successfully',
-                'data': []
-            }
-
-            return Response(response)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserProfileView(generics.RetrieveUpdateAPIView):
