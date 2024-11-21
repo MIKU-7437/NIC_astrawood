@@ -113,9 +113,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         return data
 
 
-class ChangePasswordSerializer(serializers.Serializer):
-    old_password = serializers.CharField(required=True)
-    new_password = serializers.CharField(required=True)
+# class ChangePasswordSerializer(serializers.Serializer):
+#     old_password = serializers.CharField(required=True)
+#     new_password = serializers.CharField(required=True)
 
-    class Meta:
-        ref_name = 'UsersChangePasswordSerializer'  # Уникальное имя ссылки
+#     class Meta:
+#         ref_name = 'UsersChangePasswordSerializer'  # Уникальное имя ссылки
