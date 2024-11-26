@@ -49,8 +49,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./backend_api/staticfiles:/static
-      - ./backend_api/staticfiles:/staticfiles
+      - ./staticfiles:/staticfiles
       - ./nginx/conf.d:/etc/nginx/conf.d
 
 
