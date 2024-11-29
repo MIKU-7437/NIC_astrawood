@@ -65,6 +65,7 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com
       PGADMIN_DEFAULT_PASSWORD: admin123321
+      POSTGRESQL_HOST: db
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     depends_on:
