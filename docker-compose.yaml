@@ -73,9 +73,6 @@ services:
       - nic_astrawood_network
 
 
-
-
-
   celery_worker:
     build:
       context: .
