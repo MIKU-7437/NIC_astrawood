@@ -48,13 +48,33 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./backend_api/staticfiles:/static
-      - ./backend_api/staticfiles:/staticfiles
+      - ./staticfiles:/staticfiles
       - ./nginx/conf.d:/etc/nginx/conf.d
     depends_on:
       - nic_astrawood
     networks:
       - nic_astrawood_network
+
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: nic_astrawood_pgadmin4
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com
+      PGADMIN_DEFAULT_PASSWORD: admin123321
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - db
+    networks:
+      - nic_astrawood_network
+
+
+
+
 
   celery_worker:
     build:
@@ -103,3 +123,4 @@ volumes:
   postgres_data:
   static_volume:
   media_volume:
+  pgadmin_data:

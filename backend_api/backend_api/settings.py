@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-kq8()8@%=e$cae!p$+abx+r6cw(8#wqh=xqk^rdtj#sb&%khlf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', True)
+DEBUG = os.environ.get('DEBUG', False)
 
 # Application definition
 INSTALLED_APPS = [
@@ -109,9 +109,9 @@ USE_TZ = True
 
 # Static and media files
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles/")
+STATIC_ROOT = os.path.join(BASE_DIR.parent, "staticfiles/")
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static/')]
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR.parent, 'media')
 MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
