@@ -12,3 +12,6 @@ psycopg2
 
 # без нее ошибка pkg_resources
 setuptools
+
+# Redis for Selery
+celery[redis] django-celery-beat
