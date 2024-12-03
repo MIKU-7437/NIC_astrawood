@@ -316,3 +316,34 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+    
+
+class UserAvatarView(APIView):
+    """
+    View для получения информации о пользователе вместе с аватаркой.
+    """
+
+    @swagger_auto_schema(
+        operation_description="Получить информацию о пользователе по ID, включая аватарку",
+        manual_parameters=[
+            openapi.Parameter(
+                'user_id',
+                openapi.IN_PATH,
+                description="ID пользователя",
+                type=openapi.TYPE_INTEGER,
+                required=True
+            )
+        ],
+        responses={
+            200: UserSerializer,
+            404: "User not found"
+        }
+    )
+    def get(self, request, *args, **kwargs):
+        user_id = kwargs.get("user_id")
+        try:
+            user = User.objects.get(id=user_id)
+            serializer = UserSerializer(user)
+            return Response(serializer.data, status=200)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=404)
