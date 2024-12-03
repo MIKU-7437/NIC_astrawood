@@ -2,7 +2,8 @@
 backend_api/db.sqlite3
 
 # Media uploads
-backend_api/media
+backend_api/media/
+media/
 
 # Virtual environments
 .venv/
@@ -10,7 +11,7 @@ venv/
 
 # IDE settings
 .idea/
-.vscode
+.vscode/
 
 # Environment variables
 .env
@@ -26,5 +27,3 @@ __pycache__/
 # Backups files
 backups/*
 backend_api/backups/*
-
-media/
