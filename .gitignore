@@ -26,3 +26,5 @@ __pycache__/
 # Backups files
 backups/*
 backend_api/backups/*
+
+media/
