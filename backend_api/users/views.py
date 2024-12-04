@@ -18,7 +18,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 import jwt
-
+from rest_framework.permissions import IsAuthenticated
 #Testing imports
 from rest_framework.views import APIView
 
@@ -347,3 +347,18 @@ class UserAvatarView(APIView):
             return Response(serializer.data, status=200)
         except User.DoesNotExist:
             return Response({"error": "User not found"}, status=404)
+
+
+class CurrentUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        return Response({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+        })
+
