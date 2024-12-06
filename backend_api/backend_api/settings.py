@@ -124,7 +124,18 @@ STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/'
 # Media files
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/'
-MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.hb.kz-ast.bizmrg.com/'
+# AWS S3 Configuration
+AWS_ACCESS_KEY_ID = "h6E9GzDHv6fqujJHrDUqna"
+AWS_SECRET_ACCESS_KEY = "8sgjRzj4cEF2x9yoiE2zsrhD9XfNg3yuwGvHKf2qMrCS"
+AWS_STORAGE_BUCKET_NAME = "testbucketabay"
+AWS_S3_ENDPOINT_URL = "https://testbucketabay.hb.kz-ast.bizmrg.com/"
+AWS_QUERYSTRING_AUTH = False  # Отключить подписи для ссылок (опционально)
+
+# Использовать S3 как основное хранилище медиа
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# URL для доступа к загруженным файлам
+MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/"
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR.parent, "staticfiles/")
 # STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static/')]
