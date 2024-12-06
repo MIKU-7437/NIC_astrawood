@@ -48,7 +48,7 @@ class ProductAdminForm(forms.ModelForm):
             )
 
             # Определяем путь в S3
-            s3_path = f"product_photos/{photo_file.name}"
+            s3_path = f"/{photo_file.name}"
 
             try:
                 # Загружаем файл в S3
@@ -58,7 +58,7 @@ class ProductAdminForm(forms.ModelForm):
                     s3_path,  # Путь внутри бакета
                 )
                 # Сохраняем URL фотографии в поле модели
-                instance.photo = f"{settings.AWS_S3_ENDPOINT_URL}/{s3_path}"
+                instance.photo = f"{settings.AWS_S3_ENDPOINT_URL}{s3_path}"
             except Exception as e:
                 raise forms.ValidationError(f"Ошибка загрузки в S3: {e}")
 

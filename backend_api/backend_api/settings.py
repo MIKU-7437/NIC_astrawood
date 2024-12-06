@@ -127,7 +127,7 @@ STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/'
 # AWS S3 Configuration
 AWS_ACCESS_KEY_ID = "h6E9GzDHv6fqujJHrDUqna"
 AWS_SECRET_ACCESS_KEY = "8sgjRzj4cEF2x9yoiE2zsrhD9XfNg3yuwGvHKf2qMrCS"
-AWS_STORAGE_BUCKET_NAME = "testbucketabay"
+AWS_STORAGE_BUCKET_NAME = "product_photos"
 AWS_S3_ENDPOINT_URL = "https://testbucketabay.hb.kz-ast.bizmrg.com/"
 AWS_QUERYSTRING_AUTH = False  # Отключить подписи для ссылок (опционально)
 
@@ -212,3 +212,20 @@ CELERY_RESULT_BACKEND = os.getenv("REDIS_URL", 'redis://localhost:6379/0')
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "UTC"
 CELERY_ENABLE_UTC = True
+
+
+
+# AWS S3 Configuration
+AWS_ACCESS_KEY_ID = "h6E9GzDHv6fqujJHrDUqna"
+AWS_SECRET_ACCESS_KEY = "8sgjRzj4cEF2x9yoiE2zsrhD9XfNg3yuwGvHKf2qMrCS"
+AWS_STORAGE_BUCKET_NAME = "testbucketabay"
+AWS_S3_ENDPOINT_URL = "https://testbucketabay.hb.kz-ast.bizmrg.com/"
+AWS_QUERYSTRING_AUTH = False  # Отключить подписи для публичного доступа
+
+# Использовать S3 как основное хранилище медиа
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# URL для доступа к загруженным файлам
+MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}"
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
