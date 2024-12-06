@@ -1,5 +1,6 @@
-from pathlib import Path
 import os
+from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -12,6 +13,12 @@ SECRET_KEY = 'django-insecure-kq8()8@%=e$cae!p$+abx+r6cw(8#wqh=xqk^rdtj#sb&%khlf
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', False)
+
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')  # замените на имя вашего бакета
+AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')  # замените на ваш регион
+AWS_QUERYSTRING_AUTH = False  # отключить подписи для публичного доступа
 
 # Application definition
 INSTALLED_APPS = [
@@ -26,6 +33,9 @@ INSTALLED_APPS = [
     'store',
     'users',
     'custom_auth',
+
+    'storages',
+
 
     'rest_framework',
     'corsheaders',
@@ -108,11 +118,18 @@ USE_I18N = True
 USE_TZ = True
 
 # Static and media files
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/'
+
+# Media files
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/'
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.hb.kz-ast.bizmrg.com/'
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR.parent, "staticfiles/")
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static/')]
-MEDIA_ROOT = os.path.join(BASE_DIR.parent, 'media')
-MEDIA_URL = '/media/'
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static/')]
+# MEDIA_ROOT = os.path.join(BASE_DIR.parent, 'media')
+# MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
