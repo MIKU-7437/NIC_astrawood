@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
@@ -78,9 +79,16 @@ class Product(models.Model):
     )
     photo = models.ImageField(
         verbose_name='Фотография',
-        upload_to='',
+        upload_to='test/',
         blank=True,
         null=True,
+    )
+    rating = models.IntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(9)],
+        default=0,
+    )
+    views = models.IntegerField(
+        default=0
     )
 
 
@@ -90,3 +98,10 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
+
+
+class SliderImage(models.Model):
+    photo = models.ImageField(
+        verbose_name='Фотография',
+        upload_to='',
+    )

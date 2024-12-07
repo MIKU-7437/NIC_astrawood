@@ -1,13 +1,15 @@
 from django.shortcuts import get_object_or_404
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.response import Response
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
-from .models import Category, Product
-from .serializers import CategorySerializer, ProductSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
+
+from .models import Category, Product, SliderImage
+from .serializers import (CategorySerializer, ProductSerializer,
+                          SliderImageSerializer)
 
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -110,3 +112,45 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
         """
         product_slug = self.kwargs['product_slug']
         return get_object_or_404(Product, slug=product_slug)
+
+
+class SliderImageViewSet(viewsets.ViewSet):
+    """
+    ViewSet для работы с изображениями слайдера.
+    """
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'index', openapi.IN_PATH,
+                description="Индекс изображения",
+                type=openapi.TYPE_INTEGER,
+                required=True
+            )
+        ],
+        responses={200: SliderImageSerializer()}
+    )
+    @action(detail=False, methods=['get'], url_path='get-by-index/(?P<index>\\d+)')
+    def get_by_index(self, request, index=None):
+        """
+        Возвращает изображение слайдера по его индексу.
+        """
+        try:
+            index = int(index)
+            slider_image = SliderImage.objects.all()[index]
+        except (IndexError, ValueError):
+            return Response({"detail": "Изображение с данным индексом не найдено."}, status=404)
+
+        serializer = SliderImageSerializer(slider_image)
+        return Response(serializer.data)
+
+    @swagger_auto_schema(
+        responses={200: SliderImageSerializer(many=True)}
+    )
+    def list(self, request):
+        """
+        Возвращает список всех изображений.
+        """
+        queryset = SliderImage.objects.all()
+        serializer = SliderImageSerializer(queryset, many=True)
+        return Response(serializer.data)

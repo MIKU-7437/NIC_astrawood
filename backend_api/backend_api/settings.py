@@ -5,20 +5,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-kq8()8@%=e$cae!p$+abx+r6cw(8#wqh=xqk^rdtj#sb&%khlf'
 
+BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', False)
-
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')  # замените на имя вашего бакета
-AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')  # замените на ваш регион
-AWS_QUERYSTRING_AUTH = False  # отключить подписи для публичного доступа
 
 # Application definition
 INSTALLED_APPS = [
@@ -35,7 +28,6 @@ INSTALLED_APPS = [
     'custom_auth',
 
     'storages',
-
 
     'rest_framework',
     'corsheaders',
@@ -118,27 +110,8 @@ USE_I18N = True
 USE_TZ = True
 
 # Static and media files
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/'
-
-# Media files
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-# MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/'
-# AWS S3 Configuration
-AWS_ACCESS_KEY_ID = "h6E9GzDHv6fqujJHrDUqna"
-AWS_SECRET_ACCESS_KEY = "8sgjRzj4cEF2x9yoiE2zsrhD9XfNg3yuwGvHKf2qMrCS"
-AWS_STORAGE_BUCKET_NAME = "product_photos"
-AWS_S3_ENDPOINT_URL = "https://testbucketabay.hb.kz-ast.bizmrg.com/"
-AWS_QUERYSTRING_AUTH = False  # Отключить подписи для ссылок (опционально)
-
-# Использовать S3 как основное хранилище медиа
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-# URL для доступа к загруженным файлам
-MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/"
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR.parent, "staticfiles/")
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static/')]
 # MEDIA_ROOT = os.path.join(BASE_DIR.parent, 'media')
 # MEDIA_URL = '/media/'
 
@@ -213,19 +186,15 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "UTC"
 CELERY_ENABLE_UTC = True
 
+#AWS CONFIG====================
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME", "us-east-1")
+AWS_S3_ENDPOINT_URL = os.environ.get("AWS_S3_ENDPOINT_URL")
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 
-
-# AWS S3 Configuration
-AWS_ACCESS_KEY_ID = "h6E9GzDHv6fqujJHrDUqna"
-AWS_SECRET_ACCESS_KEY = "8sgjRzj4cEF2x9yoiE2zsrhD9XfNg3yuwGvHKf2qMrCS"
-AWS_STORAGE_BUCKET_NAME = "testbucketabay"
-AWS_S3_ENDPOINT_URL = "https://testbucketabay.hb.kz-ast.bizmrg.com/"
-AWS_QUERYSTRING_AUTH = False  # Отключить подписи для публичного доступа
-
-# Использовать S3 как основное хранилище медиа
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-# URL для доступа к загруженным файлам
-MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}"
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+# MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.hb.kz-ast.bizmrg.com/{AWS_STORAGE_BUCKET_NAME}/"
+MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.hb.kz-ast.bizmrg.com/{AWS_STORAGE_BUCKET_NAME}/"
+# https://testbucketabay.hb.kz-ast.bizmrg.com/testbucketabay/20240410_22h22m54s_grim.png

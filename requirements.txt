@@ -15,4 +15,7 @@ setuptools
 
 # Redis for Selery
 celery[redis]
+django-celery
 django-celery-beat
+django-storages
+boto3
